@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 
 class GenerateNumber extends Component {
+    tempHundredTicket = [];
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -9,19 +11,32 @@ class GenerateNumber extends Component {
     }
 
     componentDidMount() {
-        this.gererateNumbers();
-    }
-
-    gererateNumbers = () => {
-        var tempArray = [];
-        for (var i = 0; i < 5; i++) {
-            tempArray.push(this.getRandomArbitrary(1,69));
+        for(var i = 0 ; i <100 ; i++){
+            this.generateATicket();
         }
-        tempArray.push(this.getRandomArbitrary(1,26));
+    }
+    
+    generateATicket = () => {
+        var tempArray = [] , tempNumber = -1;
+        while(tempArray.length !== 5){
+            tempNumber = this.getRandomArbitrary(1,69);
+            if(!tempArray.includes(tempNumber)){
+                tempArray.push(tempNumber);
+            }
+        }
+        
+        while(tempArray.length !== 6){
+            tempNumber = this.getRandomArbitrary(1,26);
+            if(!tempArray.includes(tempNumber)){
+                tempArray.push(tempNumber);
+            }
+        }
+        this.tempHundredTicket.push(tempArray);
+
         this.setState({
-           oneTicket : tempArray     
+           oneTicket : tempArray    
         });
-        console.log("length", this.state.oneTicket.length);
+
     }
 
     getRandomArbitrary = (min, max) => {
@@ -31,14 +46,29 @@ class GenerateNumber extends Component {
     }
 
     render() {
-        return (
-            <div class="container border border-primary">
-                <ul>
-                    {this.state.oneTicket.map(function (item) {
-                            console.log("each item", item);
-                            return <li>{item}</li>
+        
+        return (   
+            <div className="container border border-primary"> 
+            {this.tempHundredTicket.map(function (eachTicket){
+                var count = 0;
+                return (<div key={eachTicket.toString()} className="row">
+                    {eachTicket.map(function (item) {
+                        if(5 === count){
+                            count ++;
+                            return (    
+                                <div key={item.toString()} className="col-sm text-center rounded-circle bg-danger text-white">
+                                    {item}
+                                </div>)        
+                        } else {
+                            count ++;
+                            return (    
+                                <div key={item.toString()} className="col-sm rounded-circle bg-dark text-white text-center">
+                                    {item}
+                                </div>) 
+                        } 
                     })}
-                </ul>
+                </div>)
+                })}
             </div>
         );
     }
